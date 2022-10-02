@@ -8,8 +8,8 @@ import { deleteContacts } from 'redux/contactsSlice';
 const ContactList = () => {
   const contacts = useSelector(getContacts);
   const filter = useSelector(getFilter);
+  
   const dispatch = useDispatch();
-  console.log(contacts);
   const getVisibleContacts = () => {
     const normalizedFilter = filter.toLowerCase();
     return contacts.filter(contact =>
