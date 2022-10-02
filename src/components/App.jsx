@@ -1,57 +1,30 @@
-import { useState, useEffect } from 'react';
-import { nanoid } from 'nanoid';
 import Section from './Section/Section';
 import ContactForm from './ContactForm';
 import ContactList from './ContactList';
 import Filter from './Filter';
 import { GlobalStyle } from './GlobalStyle';
 import { Box } from './Box';
+import { useDispatch, useSelector} from 'react-redux';
+import { getContacts } from 'redux/selectors';
+import { addContacts } from 'redux/contactsSlice';
 
 const App = () => {
-  const [contacts, setContacts] = useState(() => {
-    return (
-      JSON.parse(window.localStorage.getItem('contacts')) ?? [
-        { id: nanoid(), name: 'Rosie Simpson', number: '459-12-56' },
-        { id: nanoid(), name: 'Hermione Kline', number: '443-89-12' },
-        { id: nanoid(), name: 'Eden Clements', number: '645-17-79' },
-        { id: nanoid(), name: 'Annie Copeland', number: '227-91-26' },
-      ]
-    );
-  });
-  const [filter, setFilter] = useState('');
+  // useEffect(() => {
+  //   window.localStorage.setItem('contacts', JSON.stringify(contacts));
+  // }, [contacts]);
 
-  useEffect(() => {
-    window.localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
+  const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
 
   const formSubmitHendler = ({ name, number }) => {
-    const newContact = { id: nanoid(), name, number };
     const newName = contacts.find(
       contact => contact.name.toLowerCase() === name.toLowerCase()
     );
     if (newName) {
       return alert(`Sorry, ${name} is already in your contacts`);
     } else {
-      setContacts(prevContacts => [newContact, ...prevContacts]);
+      dispatch(addContacts(name, number));
     }
-  };
-
-  const handleFilterContacts = e => {
-    setFilter(e.currentTarget.value);
-  };
-
-  const getVisibleContacts = () => {
-    const normalizedFilter = filter.toLowerCase();
-    return contacts.filter(contact =>
-      contact.name.toLowerCase().includes(normalizedFilter)
-    );
-  };
-
-  
-  const visibleContacts = getVisibleContacts();
-
-  const deleteContact = id => {
-    setContacts(contacts.filter(contact => contact.id !== id));
   };
 
   return (
@@ -68,11 +41,8 @@ const App = () => {
       <Section title="Phonebook">
         <ContactForm onSubmit={formSubmitHendler} />
         <Section title="Contacts">
-          <Filter filter={filter} handleFilterContacts={handleFilterContacts} />
-          <ContactList
-            contacts={visibleContacts}
-            onDeleteContact={deleteContact}
-          />
+          <Filter />
+          <ContactList />
         </Section>
       </Section>
     </Box>
