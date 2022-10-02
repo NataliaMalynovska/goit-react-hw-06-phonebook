@@ -4,15 +4,11 @@ import ContactList from './ContactList';
 import Filter from './Filter';
 import { GlobalStyle } from './GlobalStyle';
 import { Box } from './Box';
-import { useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getContacts } from 'redux/selectors';
 import { addContacts } from 'redux/contactsSlice';
 
 const App = () => {
-  // useEffect(() => {
-  //   window.localStorage.setItem('contacts', JSON.stringify(contacts));
-  // }, [contacts]);
-
   const dispatch = useDispatch();
   const contacts = useSelector(getContacts);
 
